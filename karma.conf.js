@@ -16,7 +16,7 @@ const fs = require('fs').promises;
 const orgStdoutWrite = process.stdout.write;
 process.stdout.write = msg => {
 	let out = '';
-	const match = msg.match(/(^|.*\s)(LOG|WARN|ERROR):\s'([\s\S]*)'/);
+	const match = msg.match(/(^|.*\s)(LOG|WARN|ERROR):\s'CUSTOM',\s'([\s\S]*)'/);
 	if (match && match.length >= 4) {
 		// Sometimes the UA of the browser will be included in the message
 		if (match[1].length) {
@@ -29,6 +29,8 @@ process.stdout.write = msg => {
 			out += match[3];
 		}
 		out += '\n';
+	} else if (/(^|.*\s)(LOG|WARN|ERROR):\s'([\s\S]*)'/.test(msg)) {
+		// Nothing
 	} else {
 		out = msg;
 	}
